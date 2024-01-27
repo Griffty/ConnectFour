@@ -28,27 +28,6 @@ public class Board {
         return false;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        sb.append("-".repeat(13));
-        sb.append("\n");
-        for (int[] row : cells) {
-            for (int i = 0; i < row.length; i++) {
-                int cell = row[i];
-                sb.append(cell == 0 ? " " : cell == 3 ? "@" : cell == 1 ? "X" : "O");
-                if (i != row.length - 1) {
-                    sb.append("|");
-                }
-            }
-            sb.append("\n");
-            sb.append("-".repeat(13));
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
     public int checkWin() {
         boolean hasEmpty = false;
         for (int[] row : cells) {
@@ -125,5 +104,24 @@ public class Board {
         for (int[] row : cells) {
             Arrays.fill(row, 0);
         }
+    }
+
+    public static int[][] StringToCells(String cellsString){
+        int[][] cells = new int[6][7];
+        for (int i = 0; i < cellsString.length(); i++) {
+            int row = i / 7;
+            int col = i % 7;
+            cells[row][col] = Integer.parseInt(String.valueOf(cellsString.charAt(i)));
+        }
+        return cells;
+    }
+    public static String cellsToString(int[][] cells) {
+        StringBuilder sb = new StringBuilder();
+        for (int[] row : cells) {
+            for (int cell : row) {
+                sb.append(cell);
+            }
+        }
+        return sb.toString();
     }
 }

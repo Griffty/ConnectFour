@@ -4,7 +4,7 @@ import jakarta.websocket.DeploymentException;
 import org.glassfish.tyrus.server.Server;
 
 public class WebSocketServer {
-    private static final int PORT = 1301;
+    public static final int PORT = 1301;
     private static WebSocketServer instance;
     public static WebSocketServer getInstance() {
         if (instance == null){
@@ -12,10 +12,10 @@ public class WebSocketServer {
         }
         return instance;
     }
-    private WebSocketEndpoint activeConnection;
+    private WebSocketServerEndpoint activeConnection;
     private final Server server;
     WebSocketServer(){
-        server = new Server("localhost",  PORT, "ConnectFour", null, WebSocketEndpoint.class); //todo: add logging for each Configuration added
+        server = new Server("localhost",  PORT, "/connect-four", null, WebSocketServerEndpoint.class); //todo: add logging for each Configuration added
         try {
             server.start();
         } catch (DeploymentException e) {
@@ -37,11 +37,11 @@ public class WebSocketServer {
         }
     }
 
-    public WebSocketEndpoint getActiveConnection() {
+    public WebSocketServerEndpoint getActiveConnection() {
         return activeConnection;
     }
 
-    public void setActiveConnection(WebSocketEndpoint activeConnection) {
+    public void setActiveConnection(WebSocketServerEndpoint activeConnection) {
         if (this.activeConnection != null){
             throw new RuntimeException("Connection is already occupied");
         }
@@ -49,5 +49,19 @@ public class WebSocketServer {
     }
     public void clearActiveConnection(){
         activeConnection = null;
+    }
+
+    public int getPort() {
+        return PORT;
+    }
+
+    public void waitForClient() {
+        while (activeConnection == null){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

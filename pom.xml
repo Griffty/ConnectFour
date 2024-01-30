@@ -6,7 +6,7 @@
 
     <groupId>org.griffty</groupId>
     <artifactId>ConnectFour</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 
     <dependencies>
         <dependency>
@@ -32,7 +32,7 @@
     </dependencies>
 
     <build>
-        <finalName>Griffty Connect Four</finalName>
+        <finalName>ConnectFour</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -41,7 +41,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.Griffty.ConnectFour</mainClass>
+                            <mainClass>org.Griffty.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -59,7 +59,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.Griffty.ConnectFour</mainClass>
+                                    <mainClass>org.Griffty.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -70,8 +70,8 @@
     </build>
 
     <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

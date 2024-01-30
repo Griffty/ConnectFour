@@ -1,17 +1,17 @@
-package org.Griffty;
+package org.Griffty.Controllers;
 
 import org.Griffty.Network.WebSocketServerEndpoint;
 import org.Griffty.Network.WebSocketServer;
+import org.Griffty.Listeners.OnClientDisconnectedListener;
 import org.Griffty.enums.InputErrorReason;
 import org.Griffty.enums.InputType;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.util.List;
 
-public class ServerDeviceGameController extends AbstractGameController implements OnClientDisconnectedListener{
+public class ServerDeviceGameController extends AbstractGameController implements OnClientDisconnectedListener {
     private final WebSocketServer server;
     private WebSocketServerEndpoint connection;
-    private String ip;
+    private List<String> IPs;
     public ServerDeviceGameController(InputType inputType) {
         super(inputType);
         server = WebSocketServer.getInstance();
@@ -24,12 +24,8 @@ public class ServerDeviceGameController extends AbstractGameController implement
 
     private boolean launchServer() {
         server.start();
-        try {
-            ip = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-        UI.showConnectionInfo(ip, server.getPort());
+        IPs = WebSocketServerEndpoint.getIPs();
+        UI.showConnectionInfo(IPs, server.getPort());
         return true;
     }
 
@@ -59,7 +55,7 @@ public class ServerDeviceGameController extends AbstractGameController implement
         UI.userDisconnected();
         stopGame();
         forceStop = false;
-        UI.showConnectionInfo(ip, server.getPort());
+        UI.showConnectionInfo(IPs, server.getPort());
         startGame();
     }
 
@@ -92,7 +88,18 @@ public class ServerDeviceGameController extends AbstractGameController implement
 
     @Override
     public boolean playAgain() {
-        return super.playAgain() && connection.requestPlayAgain();
+        boolean serverAgain = super.playAgain();
+        if (!serverAgain)
+        {
+            connection.disconnect();
+            return true;
+        }
+        if (connection.requestPlayAgain()){
+            return true;
+        }else {
+            connection.disconnect();
+            return false;
+        }
     }
 
     @Override
@@ -100,11 +107,6 @@ public class ServerDeviceGameController extends AbstractGameController implement
         super.announceWinner(victoryStatus);
         connection.sendWinner(victoryStatus);
     }
-
-    public static void main(String[] args) {
-        new ServerDeviceGameController(InputType.CLI);
-    }
-
     @Override
     public void onClientDisconnected() {
         clientDisconnected();

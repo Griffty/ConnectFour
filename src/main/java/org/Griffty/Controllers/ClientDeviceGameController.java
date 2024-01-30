@@ -1,4 +1,4 @@
-package org.Griffty;
+package org.Griffty.Controllers;
 
 import org.Griffty.Network.WebSocketClientEndpoint;
 import org.Griffty.Network.WebSocketServer;
@@ -8,9 +8,8 @@ import org.Griffty.enums.InputType;
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 
-public class ClientDeviceGameController extends AbstractGameController{ //dont extend abstractGameController
+public class ClientDeviceGameController extends AbstractGameController{
     private WebSocketClientEndpoint client;
-    private String address;
     public ClientDeviceGameController(InputType inputType) {
         super(inputType);
         startGame();
@@ -19,7 +18,7 @@ public class ClientDeviceGameController extends AbstractGameController{ //dont e
     @Override
     protected void startGame() {
         countdown = new CountDownLatch(1);
-        address = "ws://" + UI.serverAddress() + ":" + WebSocketServer.PORT + "/connect-four/server";
+        String address = "ws://" + UI.serverAddress() + ":" + WebSocketServer.PORT + "/connect-four/server";
         URI uri = URI.create(address);
         try {
             client = WebSocketClientEndpoint.connectToServer(this, uri);
@@ -28,7 +27,7 @@ public class ClientDeviceGameController extends AbstractGameController{ //dont e
             if (UI.waitForConfirmation("Do you want to try another address?")) {
                 startGame();
             }
-            return;
+            System.exit(0);
         }
         UI.setOnlineMode(2);
         try {
@@ -36,7 +35,9 @@ public class ClientDeviceGameController extends AbstractGameController{ //dont e
             UI.userDisconnected();
             if (UI.waitForConfirmation("Do you want to try another address?")) {
                 startGame();
+                return;
             }
+            System.exit(0);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -55,12 +56,8 @@ public class ClientDeviceGameController extends AbstractGameController{ //dont e
 
     @Override
     protected void makeTurn() {
-        throw new UnsupportedOperationException("Should not be called in client mode");
+        throw new UnsupportedOperationException("Should not be called from client side");
     }
-    public static void main(String[] args) {
-        new ClientDeviceGameController(InputType.CLI);
-    }
-
     public void wrongInput(InputErrorReason errorReason) {
         UI.wrongInput(errorReason);
     }

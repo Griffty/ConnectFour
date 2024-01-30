@@ -2,7 +2,7 @@ package org.Griffty.Network;
 
 import jakarta.websocket.*;
 import org.Griffty.Board;
-import org.Griffty.ClientDeviceGameController;
+import org.Griffty.Controllers.ClientDeviceGameController;
 import org.Griffty.enums.InputErrorReason;
 
 import java.io.IOException;
@@ -39,12 +39,10 @@ public class WebSocketClientEndpoint {
     }
     @OnClose
     public void onClose(Session session, CloseReason closeReason) {
-        System.out.println("Connection closed, reason: " + closeReason.getReasonPhrase()); //todo: inform user
         controller.countdown.countDown();
     }
     @OnError
     public void onError(Session session, Throwable throwable) {
-        System.out.println("Error: " + throwable.getMessage());
         throw new RuntimeException(throwable);
     }
     public void respond(String response) {

@@ -14,8 +14,8 @@ public class WebSocketServer {
     }
     private WebSocketServerEndpoint activeConnection;
     private final Server server;
-    WebSocketServer(){
-        server = new Server("localhost",  PORT, "/connect-four", null, WebSocketServerEndpoint.class); //todo: add logging for each Configuration added
+    private WebSocketServer(){
+        server = new Server("localhost",  PORT, "/connect-four", null, WebSocketServerEndpoint.class);
         try {
             server.start();
         } catch (DeploymentException e) {
@@ -31,21 +31,17 @@ public class WebSocketServer {
             }
         }
     }
-    public void stop(){
-        if (server != null){
-            server.stop();
-        }
-    }
 
     public WebSocketServerEndpoint getActiveConnection() {
         return activeConnection;
     }
 
-    public void setActiveConnection(WebSocketServerEndpoint activeConnection) {
+    public synchronized void setActiveConnection(WebSocketServerEndpoint activeConnection) {
         if (this.activeConnection != null){
             throw new RuntimeException("Connection is already occupied");
         }
         this.activeConnection = activeConnection;
+        notifyAll();
     }
     public void clearActiveConnection(){
         activeConnection = null;
@@ -55,10 +51,10 @@ public class WebSocketServer {
         return PORT;
     }
 
-    public void waitForClient() {
-        while (activeConnection == null){
+    public synchronized void waitForClient() {
+        while (activeConnection == null) {
             try {
-                Thread.sleep(100);
+                wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

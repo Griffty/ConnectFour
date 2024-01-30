@@ -1,4 +1,4 @@
-package org.Griffty;
+package org.Griffty.Controllers;
 
 import org.Griffty.enums.InputErrorReason;
 import org.Griffty.enums.InputType;

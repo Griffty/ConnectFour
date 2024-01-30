@@ -1,9 +1,8 @@
 package org.Griffty.UserInterface;
 
-import org.Griffty.Board;
 import org.Griffty.enums.InputErrorReason;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import static org.Griffty.enums.InputErrorReason.*;
@@ -22,7 +21,7 @@ public class ConnectFourConsoleInterface implements IUserInterface{
                 return getGameInput();
             }
             return col;
-        }catch (Exception e){ //todo: make if statement out of exceptions
+        }catch (Exception e){
             wrongInput(NOT_A_NUMBER);
             return getGameInput();
         }
@@ -30,29 +29,16 @@ public class ConnectFourConsoleInterface implements IUserInterface{
 
     @Override
     public void announceWinner(int victoryStatus) {
-        StringBuilder builder = new StringBuilder();
-        if (victoryStatus > 0) {
-            if (onlineMode == 0) {
-                builder.append("It's a ");
-                builder.append(victoryStatus == 1 ? "RED" : "YELLOW");
-                builder.append(" victory. Well played guys!");
-                System.out.println(builder);
-                return;
-            }
-            if (onlineMode == victoryStatus) {
-                builder.append("It's a victory. Well played!");
-            } else {
-                builder.append("You lost. Better luck next time!");
-            }
-        }else {
-            builder.append("It's a tie. What a game!");
-        }
-        System.out.println(builder);
+        System.out.println(IUserInterface.getWinMessage(victoryStatus, onlineMode));
     }
 
     @Override
-    public void showConnectionInfo(String ip, int port) {
-        System.out.println("For other users to connect to you, use this address: " + ip);
+    public void showConnectionInfo(List<String> IPs, int port) {
+        System.out.println("For other users to connect to you, use one of these addresses: ");
+        for (String ip : IPs) {
+            System.out.print(ip + ", ");
+        }
+        System.out.println();
     }
 
     @Override
@@ -81,7 +67,6 @@ public class ConnectFourConsoleInterface implements IUserInterface{
     public void serverNotFound() {
         System.out.println("Cannot find server on this address. Try again with different one");
     }
-
 
     @Override
     public void updateBoard(int[][] cells) {

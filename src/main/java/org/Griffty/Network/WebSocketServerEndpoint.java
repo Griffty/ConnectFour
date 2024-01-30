@@ -3,18 +3,38 @@ package org.Griffty.Network;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import org.Griffty.Board;
-import org.Griffty.OnClientDisconnectedListener;
+import org.Griffty.Listeners.OnClientDisconnectedListener;
 import org.Griffty.enums.InputErrorReason;
 
+import java.io.IOException;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Function;
 
 import static org.Griffty.Board.cellsToString;
 
 @ServerEndpoint("/server")
 public class WebSocketServerEndpoint {
     private OnClientDisconnectedListener listener;
+
+    public static List<String> getIPs() {
+        List<String> IPs = new ArrayList<>();
+        try {
+            NetworkInterface.getNetworkInterfaces().asIterator().forEachRemaining(networkInterface -> {
+                List<InterfaceAddress> interfaceAddresses = networkInterface.getInterfaceAddresses();
+                interfaceAddresses.forEach(interfaceAddress -> {
+                    InetAddress address = interfaceAddress.getAddress();
+                    if (address instanceof Inet4Address && !address.isLoopbackAddress()){
+                        IPs.add(address.getHostAddress());
+                    }
+                });
+            });
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+        return IPs;
+    }
 
     public void setOnClientDisconnectedListener(OnClientDisconnectedListener listener) {
         this.listener = listener;
@@ -35,17 +55,14 @@ public class WebSocketServerEndpoint {
     public void OnOpen(Session session){
         WebSocketServer.getInstance().setActiveConnection(this);
         this.serverSession = session;
-        System.out.println("Session opened, id: " + session.getId());
     }
     @OnClose
     public void OnClose(Session session, CloseReason closeReason){
         WebSocketServer.getInstance().clearActiveConnection();
         listener.onClientDisconnected();
-        System.out.println("Session closed, reason: " + closeReason.getReasonPhrase() + ", id: " + session.getId());
     }
     @OnError
     public void OnError(Session session, Throwable thr){
-        System.out.println("Error in session " + session.getId());
         throw new RuntimeException(thr);
     }
 
@@ -77,5 +94,13 @@ public class WebSocketServerEndpoint {
 
     public void sendWinner(int victoryStatus) {
         serverSession.getAsyncRemote().sendText("announceWinner:" + victoryStatus);
+    }
+
+    public void disconnect() {
+        try {
+            serverSession.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Game ended"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

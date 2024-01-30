@@ -1,13 +1,15 @@
-package org.Griffty;
+package org.Griffty.Controllers;
 
+import org.Griffty.Board;
 import org.Griffty.UserInterface.ConnectFourConsoleInterface;
-import org.Griffty.UserInterface.Graphic.ConnectFourGraphicInterface;
+import org.Griffty.UserInterface.Graphic.ConnectFourGUI;
 import org.Griffty.UserInterface.IUserInterface;
 import org.Griffty.enums.InputType;
 
 import java.util.Random;
 
-public abstract class AbstractGameController {
+public abstract class AbstractGameController { // convert to Singleton
+    public static volatile boolean isGameRunning = false;
     private static final Random random = new Random();
     protected IUserInterface UI;
     protected final Board board;
@@ -20,7 +22,7 @@ public abstract class AbstractGameController {
                 UI = new ConnectFourConsoleInterface();
                 break;
             case GUI:
-                UI = new ConnectFourGraphicInterface();
+                UI = new ConnectFourGUI();
                 break;
             case None:
                 throw new IllegalArgumentException("Input type can't be None");
@@ -37,13 +39,16 @@ public abstract class AbstractGameController {
             }
             updateUI(board.getCells(), currentTurn);
             makeTurn();
-            currentTurn = (currentTurn == 1 ? 2 : 1);
+            currentTurn = 3 - currentTurn;
         }
+        isGameRunning = false;
         updateBoard(board.getCells());
         announceWinner(victoryStatus);
         if (playAgain()){
             startGame();
+            return;
         }
+        System.exit(0);
     }
     protected void stopGame() {
         forceStop = true;

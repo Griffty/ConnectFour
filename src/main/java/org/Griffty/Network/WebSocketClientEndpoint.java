@@ -3,6 +3,7 @@ package org.Griffty.Network;
 import jakarta.websocket.*;
 import org.Griffty.Board;
 import org.Griffty.Controllers.ClientDeviceGameController;
+import org.Griffty.Statistics.StatisticsHandler;
 import org.Griffty.enums.InputErrorReason;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class WebSocketClientEndpoint {
             }
             case "announceWinner" -> {
                 int victoryStatus = Integer.parseInt(split[1]);
+                StatisticsHandler.getInstance().addGame(victoryStatus);
                 controller.announceWinner(victoryStatus);
             }
         }

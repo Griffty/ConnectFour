@@ -6,7 +6,7 @@
 
     <groupId>org.griffty</groupId>
     <artifactId>ConnectFour</artifactId>
-    <version>1.1</version>
+    <version>1.4</version>
 
     <dependencies>
         <dependency>
@@ -70,8 +70,8 @@
     </build>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

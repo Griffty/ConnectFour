@@ -33,13 +33,13 @@ public abstract class AbstractGameController { // convert to Singleton
         currentTurn = random.nextInt(2) + 1;
         int victoryStatus;
         while ((victoryStatus = board.checkWin()) == 0) {
+            currentTurn = 3 - currentTurn;
             if (forceStop) {
                 forceStop = false;
                 return;
             }
             updateUI(board.getCells(), currentTurn);
             makeTurn();
-            currentTurn = 3 - currentTurn;
         }
         isGameRunning = false;
         updateBoard(board.getCells());

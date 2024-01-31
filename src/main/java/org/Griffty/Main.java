@@ -3,38 +3,80 @@ package org.Griffty;
 import org.Griffty.Controllers.ClientDeviceGameController;
 import org.Griffty.Controllers.ServerDeviceGameController;
 import org.Griffty.Controllers.SingleDeviceGameController;
+import org.Griffty.Statistics.StatisticsHandler;
+import org.Griffty.enums.InputType;
 
-import static org.Griffty.enums.InputType.*;
+import java.util.concurrent.CompletableFuture;
+
+import static org.Griffty.enums.InputType.CLI;
+import static org.Griffty.enums.InputType.GUI;
 
 public class Main {
-    // todo: replace java scanner with something better
+
+    // todo: add statistics
+    // todo: add AI
+
     public static void main(String[] args) {
-        if (args.length !=1){
-            printHelp();
-            System.exit(1);
+        InputType gameType = GUI;
+        if (System.console() != null){
+            gameType = CLI;
         }
-        String launchOption = args[0];
+        String launchOption;
+        if(gameType == CLI){
+            try {
+                launchOption = args[0];
+            }catch (Exception exception){
+             printHelp();
+             return;
+            }
+            }else {
+            CompletableFuture<Integer> intLaunchOption = new CompletableFuture<>();
+            new GameModeDialog(intLaunchOption);
+
+         launchOption = parseLaunchOption(intLaunchOption.join());
+        }
         switch (launchOption){
             case "--solo":
             case "-s":
-                new SingleDeviceGameController(GUI);
+                new SingleDeviceGameController(gameType);
                 break;
             case "--host":
             case "-h":
-                new ServerDeviceGameController(GUI);
+                new ServerDeviceGameController(gameType);
                 break;
             case "--join":
             case "-j":
-                new ClientDeviceGameController(GUI);
+                new ClientDeviceGameController(gameType);
                 break;
+            case "--help":
+                printHelp();
+                break;
+            case "--clear-stats":
+                StatisticsHandler.getInstance().clearStats();
+                break;
+
             default:
                 printHelp();
                 System.exit(1);
         }
     }
+
+    private static String parseLaunchOption(Integer join) {
+        return switch (join) {
+            case 0 -> "-s";
+            case 1 -> "-h";
+            case 2 -> "-j";
+            default -> null;
+        };
+    }
+
     private static void printHelp(){
         System.out.println("""
                 Usage: java -jar ConnectFour.jar <launch-option>
+                To use this program with GUI just launch it with double click
+                If you want to use it from terminal start it with one of the
+                following launch option
+                
                 Available launch options:
                     <-s | --solo> start game on this computer
                     <-h | --host> host game for people in local network

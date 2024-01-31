@@ -2,6 +2,7 @@ package org.Griffty.Controllers;
 
 import org.Griffty.Network.WebSocketClientEndpoint;
 import org.Griffty.Network.WebSocketServer;
+import org.Griffty.Statistics.StatisticsHandler;
 import org.Griffty.enums.InputErrorReason;
 import org.Griffty.enums.InputType;
 
@@ -44,6 +45,7 @@ public class ClientDeviceGameController extends AbstractGameController{
     }
     public void requestGameInput() {
         String input = String.valueOf(UI.getGameInput());
+        StatisticsHandler.getInstance().addMove();
         client.respond("gameInput:" + input);
     }
 
@@ -60,5 +62,6 @@ public class ClientDeviceGameController extends AbstractGameController{
     }
     public void wrongInput(InputErrorReason errorReason) {
         UI.wrongInput(errorReason);
+        StatisticsHandler.getInstance().removeMove();
     }
 }

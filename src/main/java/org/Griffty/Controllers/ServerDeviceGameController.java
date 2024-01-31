@@ -3,6 +3,7 @@ package org.Griffty.Controllers;
 import org.Griffty.Network.WebSocketServerEndpoint;
 import org.Griffty.Network.WebSocketServer;
 import org.Griffty.Listeners.OnClientDisconnectedListener;
+import org.Griffty.Statistics.StatisticsHandler;
 import org.Griffty.enums.InputErrorReason;
 import org.Griffty.enums.InputType;
 
@@ -64,6 +65,7 @@ public class ServerDeviceGameController extends AbstractGameController implement
         while (!board.putToken(col, currentTurn)){
             UI.wrongInput(InputErrorReason.COLUMN_FULL);
             col = UI.getGameInput();
+            StatisticsHandler.getInstance().addMove();
         }
     }
     private void clientTurn() {
@@ -104,6 +106,7 @@ public class ServerDeviceGameController extends AbstractGameController implement
 
     @Override
     public void announceWinner(int victoryStatus) {
+        StatisticsHandler.getInstance().addGame(victoryStatus);
         super.announceWinner(victoryStatus);
         connection.sendWinner(victoryStatus);
     }

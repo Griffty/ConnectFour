@@ -14,6 +14,7 @@ public class ConnectFourGUI extends JFrame implements IUserInterface, BackButton
     private final Dimension size = new Dimension(800, 800);
     private GamePanel gamePanel;
     private int onlineMode;
+    private JPanel mainPanel;
     public ConnectFourGUI() {
         initGUI();
         setTitle("Ultimate Game Hub");
@@ -22,11 +23,10 @@ public class ConnectFourGUI extends JFrame implements IUserInterface, BackButton
         setLocationRelativeTo(null);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        pack();
     }
 
     private void initGUI() {
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         add(mainPanel);
         TitleLabel topPanel = new TitleLabel("Connect Four", hintMessage);
@@ -133,7 +133,6 @@ public class ConnectFourGUI extends JFrame implements IUserInterface, BackButton
 
     @Override
     public void backButtonPressed() {
-        System.out.println("Back button pressed");
-        System.exit(0);
+        new StatisticsDialog();
     }
 }

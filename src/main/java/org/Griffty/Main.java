@@ -1,5 +1,6 @@
 package org.Griffty;
 
+import org.Griffty.Controllers.AIGameController;
 import org.Griffty.Controllers.ClientDeviceGameController;
 import org.Griffty.Controllers.ServerDeviceGameController;
 import org.Griffty.Controllers.SingleDeviceGameController;
@@ -12,10 +13,6 @@ import static org.Griffty.enums.InputType.CLI;
 import static org.Griffty.enums.InputType.GUI;
 
 public class Main {
-
-    // todo: add statistics
-    // todo: add AI
-
     public static void main(String[] args) {
         InputType gameType = GUI;
         if (System.console() != null){
@@ -26,14 +23,13 @@ public class Main {
             try {
                 launchOption = args[0];
             }catch (Exception exception){
-             printHelp();
-             return;
+                 printHelp();
+                 return;
             }
-            }else {
+        }else {
             CompletableFuture<Integer> intLaunchOption = new CompletableFuture<>();
             new GameModeDialog(intLaunchOption);
-
-         launchOption = parseLaunchOption(intLaunchOption.join());
+            launchOption = parseLaunchOption(intLaunchOption.join());
         }
         switch (launchOption){
             case "--solo":
@@ -48,6 +44,10 @@ public class Main {
             case "-j":
                 new ClientDeviceGameController(gameType);
                 break;
+            case "--bot":
+            case "-b":
+                new AIGameController(gameType);
+                break;
             case "--help":
                 printHelp();
                 break;
@@ -61,16 +61,17 @@ public class Main {
         }
     }
 
-    private static String parseLaunchOption(Integer join) {
+    private static String parseLaunchOption(Integer join) { //todo: add AI
         return switch (join) {
             case 0 -> "-s";
             case 1 -> "-h";
             case 2 -> "-j";
+            case 3 -> "-b";
             default -> null;
         };
     }
 
-    private static void printHelp(){
+    private static void printHelp(){ //todo: add AI
         System.out.println("""
                 Usage: java -jar ConnectFour.jar <launch-option>
                 To use this program with GUI just launch it with double click

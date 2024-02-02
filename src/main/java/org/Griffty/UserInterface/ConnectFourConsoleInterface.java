@@ -17,10 +17,10 @@ public class ConnectFourConsoleInterface implements IUserInterface{
         try {
             int col = userInput.nextInt();
             if (col > 7 || col < 1) {
-                wrongInput(OUT_OF_BOUNDS);
+                wrongInput(COL_OUT_OF_BOUNDS);
                 return getGameInput();
             }
-            return col;
+            return col - 1;
         }catch (Exception e){
             wrongInput(NOT_A_NUMBER);
             return getGameInput();
@@ -69,9 +69,31 @@ public class ConnectFourConsoleInterface implements IUserInterface{
     }
 
     @Override
+    public int getDifficulty() {
+        userInput = new Scanner(System.in);
+        System.out.println("Enter difficulty level:" +
+                "\n1 - Easy" +
+                "\n2 - Medium" +
+                "\n3 - Hard" +
+                "\n4 - Demonic");
+        try {
+            int dif = userInput.nextInt();
+            if (dif > 4 || dif < 1) {
+                wrongInput(DIF_OUT_OF_BOUNDS);
+                return getDifficulty();
+            }
+            return dif;
+        }catch (Exception e){
+            wrongInput(NOT_A_NUMBER);
+            return getGameInput();
+        }
+    }
+
+    @Override
     public void updateBoard(int[][] cells) {
         System.out.println("\n\nHere is current board:");
         System.out.println(parseBoard(cells));
+
     }
 
     @Override
@@ -105,11 +127,12 @@ public class ConnectFourConsoleInterface implements IUserInterface{
     @Override
     public void wrongInput(InputErrorReason reason) {
         switch (reason){
-            case OUT_OF_BOUNDS -> System.out.println("You can only put token in columns from 1 to 7");
+            case COL_OUT_OF_BOUNDS -> System.out.println("You can only put token in columns from 1 to 7");
             case COLUMN_FULL -> System.out.println("This column is already full");
             case NOT_A_NUMBER -> System.out.println("You can input only numbers");
             case NOT_A_CONFIRMATION -> System.out.println("You can only input y or n");
             case WRONG_SERVER_CREDENTIALS -> System.out.println("Wrong server credentials. Address should look like 123.456.78.90 or similar. Try again");
+            case DIF_OUT_OF_BOUNDS -> System.out.println("You can only input numbers from 1 to 4");
             default ->
                 System.out.println("Wrong input");
         }

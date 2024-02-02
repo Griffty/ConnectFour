@@ -3,7 +3,18 @@ package org.Griffty;
 import java.util.Arrays;
 
 public class Board {
-    private final int[][] cells = new int[6][7];
+    private final int[][] cells;
+
+    public Board(int[][] cells) {
+        this.cells = cells.clone();
+        for (int i = 0; i < cells.length; i++) {
+            this.cells[i] = cells[i].clone();
+        }
+    }
+
+    public Board() {
+        cells = new int[6][7];
+    }
 
     private void setCell(int row, int col, int side) {
         if (cells[row][col] != 0){
@@ -17,10 +28,12 @@ public class Board {
     }
 
     public boolean putToken(int col, int side) {
-        col--;
         for (int i = cells.length - 1; i >= 0; i--) {
             int[] row = cells[i];
             if (row[col] == 0) {
+                if (side == 3){
+                    System.out.println("Side is 3");
+                }
                 setCell(i, col, side);
                 return true;
             }
@@ -28,7 +41,17 @@ public class Board {
         return false;
     }
 
-    public int checkWin() {
+    public void removeToken(int col) {
+        for (int[] row : cells) {
+            if (row[col] != 0) {
+                row[col] = 0;
+                return;
+            }
+        }
+        System.out.println("Column is empty");
+    }
+
+    public int checkWin(boolean replace) {
         boolean hasEmpty = false;
         for (int[] row : cells) {
             for (int cell : row) {
@@ -46,10 +69,12 @@ public class Board {
             for (int col = 0; col < cells[0].length - 3; col++) {
                 int cell = cells[row][col];
                 if (cell != 0 && cell == cells[row][col+1] && cell == cells[row][col+2] && cell == cells[row][col+3]) {
-                    cells[row][col] = 3;
-                    cells[row][col+1] = 3;
-                    cells[row][col+2] = 3;
-                    cells[row][col+3] = 3;
+                    if (replace) {
+                        cells[row][col] = 3;
+                        cells[row][col + 1] = 3;
+                        cells[row][col + 2] = 3;
+                        cells[row][col + 3] = 3;
+                    }
                     return cell;
                 }
             }
@@ -60,10 +85,12 @@ public class Board {
             for (int row = 0; row < cells.length - 3; row++) {
                 int cell = cells[row][col];
                 if (cell != 0 && cell == cells[row+1][col] && cell == cells[row+2][col] && cell == cells[row+3][col]) {
-                    cells[row][col] = 3;
-                    cells[row+1][col] = 3;
-                    cells[row+2][col] = 3;
-                    cells[row+3][col] = 3;
+                    if (replace) {
+                        cells[row][col] = 3;
+                        cells[row + 1][col] = 3;
+                        cells[row + 2][col] = 3;
+                        cells[row + 3][col] = 3;
+                    }
                     return cell;
                 }
             }
@@ -74,10 +101,12 @@ public class Board {
             for (int col = 0; col < cells[0].length - 3; col++) {
                 int cell = cells[row][col];
                 if (cell != 0 && cell == cells[row+1][col+1] && cell == cells[row+2][col+2] && cell == cells[row+3][col+3]) {
-                    cells[row][col] = 3;
-                    cells[row+1][col+1] = 3;
-                    cells[row+2][col+2] = 3;
-                    cells[row+3][col+3] = 3;
+                    if (replace) {
+                        cells[row][col] = 3;
+                        cells[row + 1][col + 1] = 3;
+                        cells[row + 2][col + 2] = 3;
+                        cells[row + 3][col + 3] = 3;
+                    }
                     return cell;
                 }
             }
@@ -88,10 +117,12 @@ public class Board {
             for (int col = 3; col < cells[0].length; col++) {
                 int cell = cells[row][col];
                 if (cell != 0 && cell == cells[row+1][col-1] && cell == cells[row+2][col-2] && cell == cells[row+3][col-3]) {
-                    cells[row][col] = 3;
-                    cells[row+1][col-1] = 3;
-                    cells[row+2][col-2] = 3;
-                    cells[row+3][col-3] = 3;
+                    if (replace) {
+                        cells[row][col] = 3;
+                        cells[row + 1][col - 1] = 3;
+                        cells[row + 2][col - 2] = 3;
+                        cells[row + 3][col - 3] = 3;
+                    }
                     return cell;
                 }
             }
@@ -115,6 +146,7 @@ public class Board {
         }
         return cells;
     }
+
     public static String cellsToString(int[][] cells) {
         StringBuilder sb = new StringBuilder();
         for (int[] row : cells) {
@@ -123,5 +155,9 @@ public class Board {
             }
         }
         return sb.toString();
+    }
+
+    public int getColumns() {
+        return cells[0].length;
     }
 }

@@ -26,7 +26,7 @@ public class GamePanel extends JPanel {
                         if (col == -1){
                             return;
                         }
-                        input.complete(col);
+                        input.complete(col - 1);
                     }
                 }
             }

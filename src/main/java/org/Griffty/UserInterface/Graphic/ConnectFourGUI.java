@@ -1,5 +1,6 @@
 package org.Griffty.UserInterface.Graphic;
 
+import org.Griffty.AI.DifficultyDialog;
 import org.Griffty.Listeners.BackButtonPressedListener;
 import org.Griffty.UserInterface.IUserInterface;
 import org.Griffty.enums.InputErrorReason;
@@ -71,14 +72,15 @@ public class ConnectFourGUI extends JFrame implements IUserInterface, BackButton
     }
 
     @Override
-    public void wrongInput(InputErrorReason reason) {
+    public void wrongInput(InputErrorReason reason) { //todo: replace with static in interface
         String message;
         switch (reason){
-            case OUT_OF_BOUNDS -> message = "You can only put token in columns from 1 to 7";
+            case COL_OUT_OF_BOUNDS -> message = "You can only put token in columns from 1 to 7";
             case COLUMN_FULL -> message = "This column is already full";
             case NOT_A_NUMBER -> message = "You can input only numbers";
             case NOT_A_CONFIRMATION -> message = "You can only input y or n";
             case WRONG_SERVER_CREDENTIALS -> message = "Wrong server credentials. Address should look like 123.456.78.90 or similar. Try again";
+            case DIF_OUT_OF_BOUNDS -> message = "You can only input numbers from 1 to 4";
             default ->
                     message = "Wrong input";
         }
@@ -129,6 +131,13 @@ public class ConnectFourGUI extends JFrame implements IUserInterface, BackButton
     @Override
     public void serverNotFound() {
         JOptionPane.showMessageDialog(this, "Cannot find server on this address. Try again with different one", "Game over", JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public int getDifficulty() {
+        CompletableFuture<Integer> difficulty = new CompletableFuture<>();
+        new DifficultyDialog(this, difficulty);
+        return difficulty.join();
     }
 
     @Override

@@ -11,12 +11,12 @@ public class StatisticsDialog extends JDialog {
     public StatisticsDialog() {
         stats = StatisticsHandler.getInstance().getCurrentStats();
         setTitle("Statistics");
-        setPreferredSize(new Dimension(300, 180)); // Set your desired size
-        setResizable(false); // Prevent resizing
+        setPreferredSize(new Dimension(300, 180));
+        setResizable(false);
         InitGUI();
-        pack(); // Pack the dialog so that it uses the preferred size
-        setLocationRelativeTo(null); // Center the dialog
-        setVisible(true); // Make the dialog visible
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     private void InitGUI() {

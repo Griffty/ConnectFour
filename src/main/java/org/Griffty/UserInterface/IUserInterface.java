@@ -35,4 +35,6 @@ public interface IUserInterface {
         }
         return builder.toString();
     }
+
+    int getDifficulty();
 }

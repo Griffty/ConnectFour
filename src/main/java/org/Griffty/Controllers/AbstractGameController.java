@@ -32,7 +32,7 @@ public abstract class AbstractGameController { // convert to Singleton
         board.clear();
         currentTurn = random.nextInt(2) + 1;
         int victoryStatus;
-        while ((victoryStatus = board.checkWin()) == 0) {
+        while ((victoryStatus = board.checkWin(true)) == 0) {
             currentTurn = 3 - currentTurn;
             if (forceStop) {
                 forceStop = false;

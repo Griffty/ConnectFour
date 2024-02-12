@@ -39,6 +39,7 @@ public class Main {
                     .addChoice("Host", 1)
                     .addChoice("Join", 2)
                     .addChoice("Bot", 3)
+                    .setExitOnClose(true)
                     .build();
             launchOption = parseLaunchOption(gameModDialog.getChoice());
         }

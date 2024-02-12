@@ -9,6 +9,7 @@ import java.awt.*;
  * It is intended to be extended by other classes that provide more specific functionality.
  */
 public abstract class CustomDialog<B extends CustomDialog.Builder> extends JDialog{
+    private Runnable onDispose;
     private boolean useOptimalSize;
     private boolean canBeClosed;
     private boolean exitOnClose;
@@ -63,6 +64,9 @@ public abstract class CustomDialog<B extends CustomDialog.Builder> extends JDial
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
+                if (onDispose != null) {
+                    onDispose.run();
+                }
                 if (exitOnClose) {
                     System.exit(0);
                 }
@@ -82,6 +86,7 @@ public abstract class CustomDialog<B extends CustomDialog.Builder> extends JDial
      */
     public static abstract class Builder<T extends Builder<T>> {
         protected Builder() {}
+        protected Runnable onDispose;
         protected boolean canBeClosed = true;
         protected boolean exitOnClose = false;
         protected boolean useOptimalSize = false;
@@ -89,6 +94,16 @@ public abstract class CustomDialog<B extends CustomDialog.Builder> extends JDial
         protected String title = "Connect Four";
         protected Dimension size = new Dimension(400, 120);
         protected JPanel mainPanel = null;
+
+        /**
+         * This method sets the runnable action that will run when dialog disposes.
+         * @param onDispose the runnable to run.
+         * @return the builder.
+         */
+        public T setOnDispose(Runnable onDispose) {
+            this.onDispose = onDispose;
+            return self();
+        }
 
         /**
          * This method sets the main panel of the dialog.

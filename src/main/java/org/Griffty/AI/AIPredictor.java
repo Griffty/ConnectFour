@@ -2,11 +2,25 @@ package org.Griffty.AI;
 
 import org.Griffty.Board;
 
+/**
+ * This class is responsible for predicting the AI's moves in the game.
+ */
 public class AIPredictor {
     private final int depth;
+
+    /**
+     * Constructor for the AIPredictor class.
+     * @param depth The depth of the game tree to explore for each move.
+     */
     public AIPredictor(int depth) {
         this.depth = depth;
     }
+
+    /**
+     * Makes the best move for the AI.
+     * @param board The current game board.
+     * @return The column number of the best move.
+     */
     public int makeMove(Board board) {
         Board tempBoard = new Board(board.getCells());
         int bestMove = -1;
@@ -26,6 +40,15 @@ public class AIPredictor {
         return bestMove;
     }
 
+    /**
+     * Implements the minimax algorithm to find the best move.
+     * @param board The current game board.
+     * @param depth The depth of the game tree to explore.
+     * @param alpha The best value that the maximizer currently can guarantee at that level or above.
+     * @param beta The best value that the minimizer currently can guarantee at that level or above.
+     * @param maximizingPlayer A boolean representing whether the current player is the maximizing player.
+     * @return The best score that can be achieved.
+     */
     private int minimax(Board board, int depth, int alpha, int beta, boolean maximizingPlayer) {
         if (depth == 0 || board.checkWin(false) > 0) {
             return evaluate(board);
@@ -61,6 +84,11 @@ public class AIPredictor {
         }
     }
 
+    /**
+     * Evaluates the game board.
+     * @param board The current game board.
+     * @return The score of the board.
+     */
     public static int evaluate(Board board) {
         int[][] cells = board.getCells();
         int score = 0;
@@ -105,6 +133,15 @@ public class AIPredictor {
 
         return score;
     }
+
+    /**
+     * Evaluates a line of four cells.
+     * @param a The first cell.
+     * @param b The second cell.
+     * @param c The third cell.
+     * @param d The fourth cell.
+     * @return The score of the line.
+     */
     private static int evaluateLine(int a, int b, int c, int d) {
         int score = 0;
 

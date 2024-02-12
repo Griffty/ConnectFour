@@ -6,7 +6,7 @@
 
     <groupId>org.griffty</groupId>
     <artifactId>ConnectFour</artifactId>
-    <version>1.5</version>
+    <version>1.6</version>
 
     <dependencies>
         <dependency>

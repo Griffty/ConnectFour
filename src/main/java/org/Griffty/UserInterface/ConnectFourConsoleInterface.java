@@ -7,10 +7,19 @@ import java.util.Scanner;
 
 import static org.Griffty.enums.InputErrorReason.*;
 
+/**
+ * This class implements the IUserInterface for a console-based Connect Four game.
+ * It handles user input and output through the console.
+ */
 public class ConnectFourConsoleInterface implements IUserInterface{
     private Scanner userInput = new Scanner(System.in);
     private int onlineMode = 0;
 
+    /**
+     * This method gets the game input from the user.
+     * It validates the input and prompts the user again if the input is invalid.
+     * @return the column number where the user wants to put their token.
+     */
     @Override
     public int getGameInput() {
         userInput = new Scanner(System.in);
@@ -27,11 +36,20 @@ public class ConnectFourConsoleInterface implements IUserInterface{
         }
     }
 
+    /**
+     * This method announces the winner of the game.
+     * @param victoryStatus the status of the victory.
+     */
     @Override
     public void announceWinner(int victoryStatus) {
         System.out.println(IUserInterface.getWinMessage(victoryStatus, onlineMode));
     }
 
+    /**
+     * This method shows the connection information to the user.
+     * @param IPs the IP addresses.
+     * @param port the port number.
+     */
     @Override
     public void showConnectionInfo(List<String> IPs, int port) {
         System.out.println("For other users to connect to you, use one of these addresses: ");
@@ -41,6 +59,11 @@ public class ConnectFourConsoleInterface implements IUserInterface{
         System.out.println();
     }
 
+    /**
+     * This method gets the server address from the user.
+     * It validates the input and prompts the user again if the input is invalid.
+     * @return the server address.
+     */
     @Override
     public String serverAddress() {
         userInput = new Scanner(System.in);
@@ -53,29 +76,45 @@ public class ConnectFourConsoleInterface implements IUserInterface{
         return input;
     }
 
+    /**
+     * This method sets the online mode of the game.
+     * @param mode the online mode.
+     */
     @Override
     public void setOnlineMode(int mode) {
         onlineMode = mode;
     }
 
+    /**
+     * This method is called when the user is disconnected.
+     */
     @Override
     public void userDisconnected() {
         System.out.println("Your opponent has disconnected");
     }
 
+    /**
+     * This method is called when the server is not found.
+     */
     @Override
     public void serverNotFound() {
         System.out.println("Cannot find server on this address. Try again with different one");
     }
 
+    /**
+     * This method gets the difficulty level from the user.
+     * It validates the input and prompts the user again if the input is invalid.
+     * @return the difficulty level.
+     */
     @Override
     public int getDifficulty() {
         userInput = new Scanner(System.in);
-        System.out.println("Enter difficulty level:" +
-                "\n1 - Easy" +
-                "\n2 - Medium" +
-                "\n3 - Hard" +
-                "\n4 - Demonic");
+        System.out.println("""
+                Enter difficulty level:
+                1 - Easy
+                2 - Medium
+                3 - Hard
+                4 - Demonic""");
         try {
             int dif = userInput.nextInt();
             if (dif > 4 || dif < 1) {
@@ -89,6 +128,10 @@ public class ConnectFourConsoleInterface implements IUserInterface{
         }
     }
 
+    /**
+     * This method updates the game board.
+     * @param cells the current state of the game board.
+     */
     @Override
     public void updateBoard(int[][] cells) {
         System.out.println("\n\nHere is current board:");
@@ -96,6 +139,12 @@ public class ConnectFourConsoleInterface implements IUserInterface{
 
     }
 
+    /**
+     * This method waits for the user to confirm an action.
+     * It validates the input and prompts the user again if the input is invalid.
+     * @param message the message to display to the user.
+     * @return true if the user confirms, false otherwise.
+     */
     @Override
     public boolean waitForConfirmation(String message) {
         userInput = new Scanner(System.in);
@@ -108,13 +157,18 @@ public class ConnectFourConsoleInterface implements IUserInterface{
         return input.equals("y");
     }
 
+    /**
+     * This method updates the User Interface with the current game state.
+     * @param cells the current state of the game board.
+     * @param currentTurn the current turn.
+     */
     @Override
     public void updateUI(int[][] cells, int currentTurn) {
         updateBoard(cells);
         if (onlineMode == 0) {
             System.out.println("It's " + (currentTurn == 1 ? "red" : "yellow") + " turn");
             System.out.println("To make a move, type colum you want to put your token in: ");
-        return;
+            return;
         }
         if (onlineMode == currentTurn){
             System.out.println("It's your turn");
@@ -124,6 +178,11 @@ public class ConnectFourConsoleInterface implements IUserInterface{
         }
     }
 
+    /**
+     * This method is called when the user input is wrong.
+     * It displays an error message based on the reason for the wrong input.
+     * @param reason the reason why the input is wrong.
+     */
     @Override
     public void wrongInput(InputErrorReason reason) {
         switch (reason){
@@ -134,10 +193,15 @@ public class ConnectFourConsoleInterface implements IUserInterface{
             case WRONG_SERVER_CREDENTIALS -> System.out.println("Wrong server credentials. Address should look like 123.456.78.90 or similar. Try again");
             case DIF_OUT_OF_BOUNDS -> System.out.println("You can only input numbers from 1 to 4");
             default ->
-                System.out.println("Wrong input");
+                    System.out.println("Wrong input");
         }
     }
 
+    /**
+     * This method converts the game board into a string for display.
+     * @param cells the current state of the game board.
+     * @return the game board as a string.
+     */
     private String parseBoard(int[][] cells){
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
@@ -158,4 +222,3 @@ public class ConnectFourConsoleInterface implements IUserInterface{
         return sb.toString();
     }
 }
-

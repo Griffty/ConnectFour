@@ -6,11 +6,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * This class represents the game panel for the Connect Four game.
+ * It extends JPanel and handles the game's graphical interface, including the game board and user interactions.
+ */
 public class GamePanel extends JPanel {
     private int[][] currentCells;
     private final JLabel currentTurn;
     private CompletableFuture<Integer> input;
     private int onlineMode;
+    /**
+     * The constructor initializes the game panel, sets up the game board, and adds a mouse listener for user interactions.
+     */
     public GamePanel() {
         currentCells = new int[6][7];
         currentTurn = new JLabel();
@@ -47,7 +54,7 @@ public class GamePanel extends JPanel {
         });
     }
 
-
+    // Color constants for the game board and tokens
     private static final Color backgroundColor = Color.lightGray;
     private static final Color boardColor = Color.black;
 
@@ -60,6 +67,12 @@ public class GamePanel extends JPanel {
     private int YOffset;
     private int XOffset;
     private int cellSize;
+
+    /**
+     * This method is responsible for drawing the game board and the tokens.
+     * It is called whenever the JPanel needs to be repainted.
+     * @param g the Graphics object to protect.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -109,6 +122,10 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * This method updates the label that displays the current turn.
+     * @param turn the current turn.
+     */
     private void updateCurrentTurn(int turn){
         if (onlineMode == 0) {
             currentTurn.setText("It's " + (turn == 1 ? "red" : "yellow") + " turn");
@@ -120,23 +137,49 @@ public class GamePanel extends JPanel {
             currentTurn.setText("It's your opponent's turn");
         }
     }
+
+    /**
+     * This method is used to get the next user input.
+     * It sets up a CompletableFuture that will be completed when the user makes a move.
+     * @param input the CompletableFuture to complete when the user makes a move.
+     */
     public void getNextInput(CompletableFuture<Integer> input) {
         if (this.input != null){
             throw new IllegalStateException("Input already requested");
         }
         this.input = input;
     }
+
+    /**
+     * This method clears the current user input.
+     */
     public void clearInput(){
         input = null;
     }
+
+    /**
+     * This method sets the online mode of the game.
+     * @param mode the online mode.
+     */
     public void setOnlineMode(int mode){
         onlineMode = mode;
     }
+
+    /**
+     * This method updates the User Interface with the current game state.
+     * @param cells the current state of the game board.
+     * @param currentTurn the current turn.
+     */
     public void updateUI(int[][] cells, int currentTurn) {
         currentCells = cells;
         updateCurrentTurn(currentTurn);
         repaint();
     }
+
+    /**
+     * This method updates the game board.
+     * @param cells the current state of the game board.
+     */
     public void updateBoard(int[][] cells) {
         currentCells = cells;
         repaint();

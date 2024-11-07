@@ -10,7 +10,7 @@ The game offers several launch options, including solo play, hosting a game for 
 
 ## Usage
 
-To run the game, download and compile the project using Maven. Then, to run in CLI mode, use the following command start it in the terminal, or double click it to run with GUY mode.
+To run the game, download and compile the project using Maven. Then, to run in CLI mode, run in with a command like `java org.griffty.Main` / `java -jar ConnectFour.jar`, or double click it to run with GUI mode.
 
 
 ## Contribution

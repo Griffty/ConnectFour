@@ -18,7 +18,6 @@ public class AIGameController extends AbstractGameController {
     public AIGameController(InputType inputType) {
         super(inputType);
         int depth = UI.getDifficulty();
-        depth = depth == 4 ? 5 : depth;
         ai = new AIPredictor(depth * 2); //todo: Use GPGPU computing for better performance || no need... it's already destroying me
         startGame();
     }

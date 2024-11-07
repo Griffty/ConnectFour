@@ -163,7 +163,7 @@ public class AIPredictor {
 
         // Check for bots rows of tokens
         if (botPieces == 4) {
-            score += 1000;
+            score += 100000;
         } else if (botPieces == 3 && empty == 1) {
             score += 50;
         } else if (botPieces == 2 && empty == 2) {
@@ -172,7 +172,7 @@ public class AIPredictor {
 
         // Check for opponents rows of tokens
         if (opponentPieces == 3 && empty == 1) {
-            score -= 500;
+            score -= 300;
         } else if (opponentPieces == 2 && empty == 2) {
             score -= 10;
         }

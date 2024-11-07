@@ -6,6 +6,8 @@ import org.Griffty.Util.Dialogs.DialogFactory;
 import org.Griffty.enums.InputType;
 import org.Griffty.Controllers.*;
 
+import java.lang.reflect.Constructor;
+
 import static org.Griffty.enums.InputType.CLI;
 import static org.Griffty.enums.InputType.GUI;
 
@@ -19,7 +21,7 @@ public class Main {
      * It determines the game type (CLI or GUI), parses the launch option, and starts the appropriate game controller.
      * @param args the command-line arguments.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchMethodException {
         InputType gameType = GUI;
         if (System.console() != null){
             gameType = CLI;
@@ -78,7 +80,7 @@ public class Main {
      * @param join the choice made by the user in the GUI.
      * @return the corresponding command-line argument.
      */
-    private static String parseLaunchOption(Integer join) { //todo: add AI
+    private static String parseLaunchOption(Integer join) {
         return switch (join) {
             case 0 -> "-s";
             case 1 -> "-h";
@@ -91,7 +93,7 @@ public class Main {
     /**
      * This method prints the help message for the command-line interface.
      */
-    private static void printHelp(){ //todo: add AI
+    private static void printHelp(){
         System.out.println("""
                 Usage: java -jar ConnectFour.jar <launch-option>
                 To use this program with GUI just launch it with double click
